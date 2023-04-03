@@ -8,6 +8,8 @@ packages = [{include = "interview_orbital_materials"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+black = "^23.3.0"
+ase = "^3.22.1"
 
 
 [build-system]
