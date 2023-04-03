@@ -18,6 +18,8 @@ Note: the seed option is set to the pytorch default value of 0.
 
 Note: may need a `pin_memory` method for dataset?
 
+Note: We could use `from torch.nn.utils.rnn import pad_sequence` to pad each sequence to the max length in each batch, but this isn't currently implemented.
+
 ## Usage
 
 Run the script with the required and optional arguments as needed:

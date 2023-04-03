@@ -4,6 +4,7 @@ from pathlib import Path
 from torch.utils.data import DataLoader, Dataset
 import torch
 import torch.nn.functional as F
+from itertools import cycle
 
 
 class MoleculeDataset3D(Dataset):
@@ -73,20 +74,37 @@ class MoleculeDataset3D(Dataset):
 def main(
     data_dir: str, num_workers: int, batch_size: int, coord_jitter_std: float
 ) -> DataLoader:
-    print(f"Data directory: {data_dir}")
-    print(f"Number of workers: {num_workers}")
-    print(f"Batch size: {batch_size}")
-
+    """
+    Load the data, print the batch size, and print the shape of the atomic_numbers and positions tensors for 100 batches.
+    The dataloader has shuffle=True, drops_last=True, and a fixed random seed.
+    """
     dataset = MoleculeDataset3D(data_dir, coord_jitter_std=coord_jitter_std)
+
+    # Create a generator with a fixed seed
+    seed = 42
+    generator = torch.Generator()
+    generator.manual_seed(seed)
+
     dataloader = DataLoader(
-        dataset, batch_size=batch_size, num_workers=num_workers, drop_last=True
+        dataset,
+        batch_size=batch_size,
+        num_workers=num_workers,
+        drop_last=True,
+        generator=generator,
     )
 
-    for batch in dataloader:
-        print(batch)
-        break
+    print(f"Batch size: {batch_size}")
 
-    return dataloader
+    BATCHES_TO_PRINT = 100
+    i = 0
+    for batch in cycle(dataloader):
+        atomic_numbers = batch["atomic_numbers"]
+        positions = batch["positions"]
+        print(f"Shape of atomic_numbers tensor: {atomic_numbers.shape}")
+        print(f"Shape of positions tensor: {positions.shape}")
+        i += 1
+        if i == BATCHES_TO_PRINT:
+            break
 
 
 if __name__ == "__main__":
