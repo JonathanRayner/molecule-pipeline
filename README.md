@@ -12,7 +12,11 @@ This Python script is used for loading data from a specified directory. It takes
 
 - `--batch-size` (int): How many samples per batch to load. Default value is 1.
 
-Note:, the `shuffle` option is always enabled for data loading.
+Note: the `shuffle` option is always enabled for data loading.
+
+Note: the seed option is set to the pytorch default value of 0.
+
+Note: may need a `pin_memory` method for dataset?
 
 ## Usage
 

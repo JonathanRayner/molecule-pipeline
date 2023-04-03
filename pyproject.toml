@@ -10,6 +10,7 @@ packages = [{include = "interview_orbital_materials"}]
 python = "^3.10"
 black = "^23.3.0"
 ase = "^3.22.1"
+torch = "^2.0.0"
 
 
 [build-system]
