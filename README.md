@@ -4,7 +4,7 @@
 
 This script `run.py` provides a way to load a dataset of molecular structures stored as SDF files, perform data augmentation, and output tensor shapes of atomic numbers and positions for the first 100 batches.
 
-The script uses the ASE package to read the SDF files and PyTorch for tensor manipulation and data batching.
+The script uses the ASE package to read the SDF files and the [PyTorch cpu-only version](https://download.pytorch.org/whl/cpu) for tensor manipulation and data batching.
 
 ## Usage
 
