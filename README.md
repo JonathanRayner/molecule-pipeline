@@ -11,7 +11,8 @@ The script uses the ASE package to read the SDF files and the [PyTorch cpu-only 
 You can run the script from a docker container as follows (you will need to include the data directory as a volume):
 
 ```bash
-docker run -v /path/to/your/data/dir:/app/data molecule-pipeline --data-dir data
+docker pull jonathanrayner/molecule-pipeline:latest
+docker run -v /path/to/your/data/dir:/app/data jonathanrayner/molecule-pipeline:latest --data-dir data
 ```
 
 You can run the script from the command line as follows:
@@ -32,7 +33,7 @@ For example:
 TODO
 
 ```bash
-docker run -v /path/to/your/data/dir:/app/data molecule-pipeline --data-dir data --num-workers 4 --batch-size 10 --coord-jitter-std 0.1
+docker run -v /path/to/your/data/dir:/app/data molecule-pipeline:latest --data-dir data --num-workers 4 --batch-size 10 --coord-jitter-std 0.1
 ```
 
 ## Documentation
