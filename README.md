@@ -1,29 +1,64 @@
-# Data Loader Script
+# 3D Molecular Data Pipeline
 
-This Python script is used for loading data from a specified directory. It takes one required argument and two optional arguments:
+## Overview
 
-## Required Argument
+This script `run.py` provides a way to load a dataset of molecular structures stored as SDF files, perform data augmentation, and output tensor shapes of atomic numbers and positions for the first 100 batches.
 
-- `--data-dir`: Path to the data directory.
-
-## Optional Arguments
-
-- `--num-workers` (int): Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process. Default value is 0.
-
-- `--batch-size` (int): How many samples per batch to load. Default value is 1.
-
-Note: the `shuffle` option is always enabled for data loading.
-
-Note: the seed option is set to the pytorch default value of 0.
-
-Note: may need a `pin_memory` method for dataset?
-
-Note: We could use `from torch.nn.utils.rnn import pad_sequence` to pad each sequence to the max length in each batch, but this isn't currently implemented.
+The script uses the ASE package to read the SDF files and PyTorch for tensor manipulation and data batching.
 
 ## Usage
 
-Run the script with the required and optional arguments as needed:
+You can run the script from a docker container as follows (you will need to include the data directory as a volume):
 
 ```bash
-python data_loader.py --data-dir /path/to/data --num-workers 4 --batch-size 32
+docker run -v /path/to/your/data/dir:/app/data molecule-pipeline --data-dir data
 ```
+
+You can run the script from the command line as follows:
+
+```bash
+cd interview_orbital_materials
+python run.py --data-dir /path/to/your/data/dir
+```
+
+You can also use optional arguments:
+
+- `--num-workers`: Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process. (default: 0)
+- `--batch-size`: How many samples per batch to load (default: 1)
+- `--coord-jitter-std`: Std of gaussian noise added to coordinate positions for data augmentation (default: 0.0)
+
+For example:
+
+TODO
+
+```bash
+docker run -v /path/to/your/data/dir:/app/data molecule-pipeline --data-dir data --num-workers 4 --batch-size 10 --coord-jitter-std 0.1
+```
+
+## Documentation
+
+### MoleculeDataset3D
+
+`MoleculeDataset3D` is a custom PyTorch `Dataset` class that reads molecular structures from SDF files using the ASE package.
+
+Arguments:
+
+- `data_dir`: Path to the directory containing the SDF files
+- `coord_jitter_std`: Std of gaussian noise added to coordinate positions for data augmentation
+- `max_num_atoms`: Sequences of atomic numbers and coordinate positions are padded with zeros to this length for batching (default: 50)
+
+Methods:
+
+- `augment_coordinates_with_jitter()`: Add zero-mean gaussian noise to the coordinates of the atoms in a molecule
+- `pad_first_dim_with_zeros()`: Pad the first dimension of a tensor with zeros to the specified length
+
+### main()
+
+The `main()` function loads the data, prints the batch size, and prints the shape of the atomic_numbers and positions tensors for 100 batches. The dataloader has shuffle=True, drops_last=True, and a fixed random seed.
+
+Arguments:
+
+- `data_dir`: Path to the data directory
+- `num_workers`: Number of subprocesses to use for data loading (default: 0)
+- `batch_size`: How many samples per batch to load (default: 1)
+- `coord_jitter_std`: Std of gaussian noise added to coordinate positions for data augmentation (default: 0.0)
