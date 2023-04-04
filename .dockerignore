@@ -1,0 +1,8 @@
+# Ignore everything by default
+*
+
+# Include necessary files and directories
+!pyproject.toml
+!poetry.lock
+!interview_orbital_materials/
+!README.md
